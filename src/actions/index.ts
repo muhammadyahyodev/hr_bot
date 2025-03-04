@@ -8,6 +8,7 @@ bot.on("message", async (ctx, next) => {
 
     if (/^\d+$/.test(text)) {
         next()
+        return;
     }
 
     if (isUserInQuestionMode(userId)) {
@@ -16,7 +17,9 @@ bot.on("message", async (ctx, next) => {
 
         await sendNotifToAdminOfMessage(ctx); 
     } else {
-        await ctx.reply("Savol berish uchun avval /savol deb yozing.");
+    
+        await ctx.reply(`Savol berish uchun /savol foydalaning\n\nSavollar ro'yxatini ko'rish uchun qaytadan /start bosing`); 
+    
     }
 });
 bot.hears(/^\d+$/, getFaqById);
