@@ -1,0 +1,10 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.isUserInQuestionMode = exports.removeUserFromQuestionMode = exports.addUserToQuestionMode = void 0;
+const usersInQuestionMode = new Set();
+const addUserToQuestionMode = (userId) => usersInQuestionMode.add(userId);
+exports.addUserToQuestionMode = addUserToQuestionMode;
+const removeUserFromQuestionMode = (userId) => usersInQuestionMode.delete(userId);
+exports.removeUserFromQuestionMode = removeUserFromQuestionMode;
+const isUserInQuestionMode = (userId) => usersInQuestionMode.has(userId);
+exports.isUserInQuestionMode = isUserInQuestionMode;

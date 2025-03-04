@@ -1,13 +1,15 @@
 import { AppDataSource } from '../database/data-source';
+import { logger } from '../utils/logger';
 import { bot } from './bot';
 
 AppDataSource
     .initialize()
     .then(() => {
-        console.log("Data Source has been initialized!")
+        logger('Data Source has been initialized', "info")
     })
     .catch((err) => {
-        console.error("Error during Data Source initialization:", err)
+        logger(err, "error")
     })
 
 bot.start();
+logger("Bot has been started", "info")

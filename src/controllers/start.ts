@@ -4,6 +4,7 @@ import { Faq } from "../entities/faq.entity";
 import { QuestionStatus } from "../utils/enums";
 import { INTRODUCTION_MESSAGE } from "../utils/constants";
 import { bot } from "../core/bot";
+import { logger } from "../utils/logger";
 
 const faqRepository = AppDataSource.getRepository(Faq)
 
@@ -28,33 +29,41 @@ const startController = async (ctx: Context) => {
         await ctx.reply(message, { reply_markup: keyboard });
 
     } catch (error) {
-        console.log(error)
+
+        logger("Error: startController", "error")
+    
     }
 }
 
 const getFaqById = async (ctx: Context) => {
-    const id = Number(ctx.message?.text)
-    const faq = await faqRepository.findOne({ where: { id }});
+    try {
+        const id = Number(ctx.message?.text)
+        const faq = await faqRepository.findOne({ where: { id }});
 
-    const faqEntities = await faqRepository.find({
-        where: {
-            status: QuestionStatus.OPEN
+        const faqEntities = await faqRepository.find({
+            where: {
+                status: QuestionStatus.OPEN
+            }
+        });
+
+        if (faqEntities.length === 0) {
+            ctx.reply(`Ko'rsatilgan raqamlardan foydalaning!`)
         }
-    });
 
-    if (faqEntities.length === 0) {
-        ctx.reply(`Ko'rsatilgan raqamlardan foydalaning!`)
+        const keyboard = new Keyboard(
+        faqEntities.map((faq) => [`${faq.id}`])
+        )
+        .resized() 
+        .oneTime();
+
+        const responseFormat = `${faq?.question}?\n\n<b>${faq?.answer}</b>`
+
+        ctx.reply(responseFormat, {parse_mode: "HTML", reply_markup: keyboard })
+    } catch (error) {
+        
+        logger("Error: getById", "error")
+
     }
-
-    const keyboard = new Keyboard(
-      faqEntities.map((faq) => [`${faq.id}`])
-    )
-      .resized() 
-      .oneTime();
-
-    const responseFormat = `${faq?.question}?\n\n<b>${faq?.answer}</b>`
-
-    ctx.reply(responseFormat, {parse_mode: "HTML", reply_markup: keyboard })
 }
 
 const sendNotifToAdminOfMessage = async (ctx: Context) => {
@@ -69,7 +78,9 @@ const sendNotifToAdminOfMessage = async (ctx: Context) => {
         ctx.reply('Tez orada javob berishga harakat qilamiz!')
 
     } catch (error) {
-        console.log(error);
+
+        logger("Error: sendNotificationMessage", "error")
+    
     }
 }
 

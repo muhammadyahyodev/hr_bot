@@ -6,6 +6,7 @@
   "scripts": {
     "debug": "npx ts-node src/main.ts",
     "dev": "npx nodemon src/main.ts",
+    "prod": "node dist/main.js",
     "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
     "migration:generate": "npm run typeorm -- --dataSource=src/database/data-source.ts migration:generate ./src/database/migrations/$npm_config_name",
     "migration:create": "npm run typeorm -- migration:create ./src/database/migrations/$npm_config_name",
@@ -20,6 +21,8 @@
     "dotenv": "^16.4.7",
     "grammy": "^1.35.0",
     "pg": "^8.13.3",
+    "pino": "^9.6.0",
+    "pino-pretty": "^13.0.0",
     "postgres": "^3.4.5",
     "reflect-metadata": "^0.2.2",
     "typeorm": "^0.3.21"
