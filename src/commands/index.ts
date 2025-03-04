@@ -1,6 +1,6 @@
 import { startController } from "../controllers";
 import { bot } from "../core/bot";
-import { addUserToQuestionMode } from "../shared/utils/state";
+import { addUserToQuestionMode } from "../utils/state";
 
 
 bot.command('start', startController);

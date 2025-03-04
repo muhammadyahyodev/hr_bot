@@ -1,6 +1,6 @@
 import { getFaqById, sendNotifToAdminOfMessage } from "../controllers";
 import { bot } from "../core/bot";
-import { isUserInQuestionMode, removeUserFromQuestionMode } from "../shared/utils/state";
+import { isUserInQuestionMode, removeUserFromQuestionMode } from "../utils/state";
 
 bot.on("message", async (ctx, next) => {
     const userId = ctx.from.id;

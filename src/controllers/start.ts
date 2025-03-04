@@ -1,8 +1,8 @@
 import { Context, Keyboard } from "grammy";
 import { AppDataSource } from "../database/data-source";
 import { Faq } from "../entities/faq.entity";
-import { QuestionStatus } from "../shared/enums";
-import { INTRODUCTION_MESSAGE } from "../shared/constants";
+import { QuestionStatus } from "../utils/enums";
+import { INTRODUCTION_MESSAGE } from "../utils/constants";
 import { bot } from "../core/bot";
 
 const faqRepository = AppDataSource.getRepository(Faq)

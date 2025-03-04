@@ -1,5 +1,5 @@
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
-import { QuestionStatus } from "../shared/enums";
+import { QuestionStatus } from "../utils/enums";
 
 @Entity({ name: "faq" })
 export class Faq {
