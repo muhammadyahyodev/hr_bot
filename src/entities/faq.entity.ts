@@ -1,4 +1,5 @@
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { QuestionStatus } from "../shared/enums";
 
 @Entity({ name: "faq" })
 export class Faq {
@@ -11,9 +12,12 @@ export class Faq {
     @Column({ nullable: true })
     answer!: string;
 
-    @Column()
+    @Column({ nullable: false, default: QuestionStatus.OPEN })
+    status!: QuestionStatus;
+
+    @Column({ nullable: true, default: new Date()})
     createdAt!: Date
 
-    @Column()
+    @Column({ nullable: true })
     updatedAt!: Date
 }

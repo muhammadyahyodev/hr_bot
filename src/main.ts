@@ -3,3 +3,4 @@ dotenv.config();
 
 import './core';
 import './commands';
+import './actions';

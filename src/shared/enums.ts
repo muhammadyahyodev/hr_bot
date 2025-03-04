@@ -1,0 +1,1 @@
+export enum QuestionStatus { OPEN = 'open', ASSIGNED = 'assigned' };
