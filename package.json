@@ -1,0 +1,33 @@
+{
+  "name": "hr_bot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "debug": "npx ts-node src/main.ts",
+    "dev": "npx nodemon src/main.ts",
+    "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
+    "migration:generate": "npm run typeorm -- --dataSource=src/database/data-source.ts migration:generate ./src/database/migrations/$npm_config_name",
+    "migration:create": "npm run typeorm -- migration:create ./src/database/migrations/$npm_config_name",
+    "migration:run": "npm run typeorm -- --dataSource=src/database/data-source.ts migration:run",
+    "migration:revert": "npm run typeorm -- --dataSource=src/database/data-source.ts migration:revert"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.4.1",
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "grammy": "^1.35.0",
+    "pg": "^8.13.3",
+    "postgres": "^3.4.5",
+    "reflect-metadata": "^0.2.2",
+    "typeorm": "^0.3.21"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.9",
+    "nodemon": "^3.1.9",
+    "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0"
+  }
+}
