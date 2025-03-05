@@ -5,7 +5,6 @@ import { QuestionStatus } from "../utils/enums";
 import { INTRODUCTION_MESSAGE } from "../utils/constants";
 import { bot } from "../core/bot";
 import { logger } from "../utils/logger";
-import { adminModeOff } from "../utils/state";
 
 const faqRepository = AppDataSource.getRepository(Faq)
 
