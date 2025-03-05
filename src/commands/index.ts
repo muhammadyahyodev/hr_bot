@@ -1,6 +1,6 @@
 import { startController } from "../controllers";
 import { bot } from "../core/bot";
-import { addUserToQuestionMode, adminModeOn } from "../utils/state";
+import { addUserToQuestionMode, setAdminMode } from "../utils/state";
 
 
 bot.command('start', startController);
@@ -16,6 +16,6 @@ bot.command('admin',  async (ctx) => {
         return;
     }
 
-    adminModeOn(ctx.message?.from.id as number);
+    setAdminMode(true);
     await ctx.reply("Savol va javobni qo'shishingiz mumkin!");
 })

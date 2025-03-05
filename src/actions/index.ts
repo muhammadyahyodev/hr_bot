@@ -1,5 +1,5 @@
 import { addFaqToList, getFaqById, sendNotifToAdminOfMessage } from "../controllers";
-import { adminModeOff, isAdminMode, isUserInQuestionMode, removeUserFromQuestionMode } from "../utils/state";
+import { isAdminMode, isUserInQuestionMode, removeUserFromQuestionMode } from "../utils/state";
 import { bot } from "../core/bot";
 
 bot.on("message", async (ctx, next) => {
@@ -12,7 +12,7 @@ bot.on("message", async (ctx, next) => {
     }
 
     // Agar faqat raqam bo'lsa va user question mode'da bo'lmasa, `getFaqById` ishlashi uchun return qilamiz
-    if (/^\d+$/.test(text) && !isUserInQuestionMode(userId)) {
+    if (/^\d+$/.test(text) && !isUserInQuestionMode(userId) && !isAdminMode()) {
         return next(); // `bot.hears(/^\d+$/, getFaqById)` ga o'tadi
     }
 
@@ -30,7 +30,7 @@ bot.on("message", async (ctx, next) => {
     }
 
     // Agar admin FAQ qo'shayotgan bo'lsa, `next()` orqali keyingi handlerga o'tamiz
-    if (isAdminMode(userId)) {
+    if (isAdminMode()) {
         return next();
     }
 
@@ -40,14 +40,20 @@ bot.on("message", async (ctx, next) => {
     );
 });
 
-bot.hears(/^\d+$/, getFaqById);
+bot.hears(/^\d+$/, (ctx, next) => {
+    if (isAdminMode()) {
+        return next()
+    }
+
+    getFaqById(ctx);
+});
 
 bot.on("message", async (ctx) => {
     const userId = ctx.message?.from.id
+    const isAdmin = String(userId) === process.env.BOT_ADMIN_ID
     
-    if (isAdminMode(userId)) {
+    if (isAdminMode() && isAdmin) {
         await addFaqToList(ctx);
-        adminModeOff(userId)
     } else {
         await ctx.reply('Admin mode yoqilmagan!') 
     }

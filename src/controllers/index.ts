@@ -5,6 +5,7 @@ import { QuestionStatus } from "../utils/enums";
 import { INTRODUCTION_MESSAGE } from "../utils/constants";
 import { bot } from "../core/bot";
 import { logger } from "../utils/logger";
+import { setAdminMode } from "../utils/state";
 
 const faqRepository = AppDataSource.getRepository(Faq)
 
@@ -98,7 +99,7 @@ const addFaqToList = async (ctx: Context) => {
         const answerMatch = content.match(/Javob:\s*(.+)/is);
         
         if (!questionMatch || !answerMatch) {
-            return ctx.reply("⚠️ Xato format! Iltimos, quyidagi formatda yozing:\n\n:\nSavol: [Savol]\Javob: [Javob]");
+            return ctx.reply("⚠️ Xato format! Iltimos, quyidagi formatda yozing:\n\nSavol: [Savol]\nJavob: [Javob]");
         }
 
         const question = questionMatch[1].trim();
@@ -109,6 +110,8 @@ const addFaqToList = async (ctx: Context) => {
         })
 
         await faqRepository.save(faq);
+
+        setAdminMode(false);
 
         await ctx.reply(`✅ Savol va javob qabul qilindi:\n\n❓ *${question}*\n📌 ${answer}`);
     } catch (error) {
