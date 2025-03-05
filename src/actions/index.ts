@@ -1,5 +1,5 @@
 import { addFaqToList, getFaqById, sendNotifToAdminOfMessage } from "../controllers";
-import { isUserInQuestionMode, removeUserFromQuestionMode } from "../utils/state";
+import { adminModeOff, isAdminMode, isUserInQuestionMode, removeUserFromQuestionMode } from "../utils/state";
 import { bot } from "../core/bot";
 
 bot.on("message", async (ctx, next) => {
@@ -30,7 +30,7 @@ bot.on("message", async (ctx, next) => {
     }
 
     // Agar admin FAQ qo'shayotgan bo'lsa, `next()` orqali keyingi handlerga o'tamiz
-    if (text.startsWith('admin:')) {
+    if (isAdminMode(userId)) {
         return next();
     }
 
@@ -42,25 +42,14 @@ bot.on("message", async (ctx, next) => {
 
 bot.hears(/^\d+$/, getFaqById);
 
-bot.on("message", async (ctx, next) => {
+bot.on("message", async (ctx) => {
     const userId = ctx.message?.from.id
-
-    if (Number(userId) !== Number(process.env.BOT_ADMIN_ID)) {
-        ctx.reply('Ruxsat etilmagan!')
-        return;
-    }
-
-    const text = ctx.message?.text?.trim() as string;
-
-    if (!text) {
-        await ctx.reply(`Ma'lumotni to'g'ri shaklda yuboring!`);
-        return;
-    }
-
-    if (text.startsWith("admin:")) {
+    
+    if (isAdminMode(userId)) {
         await addFaqToList(ctx);
-        return;
+        adminModeOff(userId)
+    } else {
+        await ctx.reply('Admin mode yoqilmagan!') 
     }
-
-    return next();
+    
 });

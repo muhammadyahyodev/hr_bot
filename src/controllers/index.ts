@@ -5,6 +5,7 @@ import { QuestionStatus } from "../utils/enums";
 import { INTRODUCTION_MESSAGE } from "../utils/constants";
 import { bot } from "../core/bot";
 import { logger } from "../utils/logger";
+import { adminModeOff } from "../utils/state";
 
 const faqRepository = AppDataSource.getRepository(Faq)
 
@@ -84,17 +85,23 @@ const sendNotifToAdminOfMessage = async (ctx: Context) => {
 }
 
 const addFaqToList = async (ctx: Context) => {
-    try {
+    try {    
+
         const text = ctx.message?.text?.trim() as string;
 
-        const content = text.replace(/^admin:\s*/, "").trim();
+        if (!text) {
+            await ctx.reply(`Ma'lumotni to'g'ri shaklda yuboring!`);
+            return;
+        }
+
+        const content = text.trim();
         const questionMatch = content.match(/question:\s*(.+)/i);
         const answerMatch = content.match(/answer:\s*(.+)/is);
-    
+        
         if (!questionMatch || !answerMatch) {
-            return ctx.reply("⚠️ Xato format! Iltimos, quyidagi formatda yozing:\n\nadmin:\nquestion: [Savol]\nanswer: [Javob]");
+            return ctx.reply("⚠️ Xato format! Iltimos, quyidagi formatda yozing:\n\n:\nquestion: [Savol]\nanswer: [Javob]");
         }
-    
+
         const question = questionMatch[1].trim();
         const answer = answerMatch[1].trim();
 
@@ -104,8 +111,7 @@ const addFaqToList = async (ctx: Context) => {
 
         await faqRepository.save(faq);
 
-        await ctx.reply(`✅ Savol va javob qabul qilindi:\n\n❓ *${question}*\n📌 ${answer}`);        
-
+        await ctx.reply(`✅ Savol va javob qabul qilindi:\n\n❓ *${question}*\n📌 ${answer}`);
     } catch (error) {
         
         logger('Error: addFaqToList', "error")
