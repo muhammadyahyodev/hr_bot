@@ -46,15 +46,14 @@ const getFaqById = async (ctx: Context) => {
             }
         });
 
-        if (faqEntities.length === 0) {
+        if (!faq) {
             ctx.reply(`Ko'rsatilgan raqamlardan foydalaning!`)
+            return;
         }
 
-        const keyboard = new Keyboard(
-        faqEntities.map((faq) => [`${faq.id}`])
-        )
-        .resized() 
-        .oneTime();
+        const keyboard = new Keyboard(faqEntities.map((faq) => [`${faq.id}`]))
+            .resized() 
+            .oneTime();
 
         const responseFormat = `${faq?.question}?\n\n<b>${faq?.answer}</b>`
 
@@ -84,4 +83,34 @@ const sendNotifToAdminOfMessage = async (ctx: Context) => {
     }
 }
 
-export { startController, sendNotifToAdminOfMessage, getFaqById }
+const addFaqToList = async (ctx: Context) => {
+    try {
+        const text = ctx.message?.text?.trim() as string;
+
+        const content = text.replace(/^admin:\s*/, "").trim();
+        const questionMatch = content.match(/question:\s*(.+)/i);
+        const answerMatch = content.match(/answer:\s*(.+)/is);
+    
+        if (!questionMatch || !answerMatch) {
+            return ctx.reply("⚠️ Xato format! Iltimos, quyidagi formatda yozing:\n\nadmin:\nquestion: [Savol]\nanswer: [Javob]");
+        }
+    
+        const question = questionMatch[1].trim();
+        const answer = answerMatch[1].trim();
+
+        const faq = faqRepository.create({
+            question, answer
+        })
+
+        await faqRepository.save(faq);
+
+        await ctx.reply(`✅ Savol va javob qabul qilindi:\n\n❓ *${question}*\n📌 ${answer}`);        
+
+    } catch (error) {
+        
+        logger('Error: addFaqToList', "error")
+    
+    }
+}
+
+export { startController, sendNotifToAdminOfMessage, getFaqById, addFaqToList }
