@@ -94,11 +94,11 @@ const addFaqToList = async (ctx: Context) => {
         }
 
         const content = text.trim();
-        const questionMatch = content.match(/question:\s*(.+)/i);
-        const answerMatch = content.match(/answer:\s*(.+)/is);
+        const questionMatch = content.match(/Savol:\s*(.+)/i);
+        const answerMatch = content.match(/Javob:\s*(.+)/is);
         
         if (!questionMatch || !answerMatch) {
-            return ctx.reply("⚠️ Xato format! Iltimos, quyidagi formatda yozing:\n\n:\nquestion: [Savol]\nanswer: [Javob]");
+            return ctx.reply("⚠️ Xato format! Iltimos, quyidagi formatda yozing:\n\n:\nSavol: [Savol]\Javob: [Javob]");
         }
 
         const question = questionMatch[1].trim();
