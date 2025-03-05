@@ -43,6 +43,13 @@ bot.on("message", async (ctx, next) => {
 bot.hears(/^\d+$/, getFaqById);
 
 bot.on("message", async (ctx, next) => {
+    const userId = ctx.message?.from.id
+
+    if (Number(userId) !== Number(process.env.BOT_ADMIN_ID)) {
+        ctx.reply('Ruxsat etilmagan!')
+        return;
+    }
+
     const text = ctx.message?.text?.trim() as string;
 
     if (!text) {
